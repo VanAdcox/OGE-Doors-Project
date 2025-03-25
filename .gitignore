@@ -2,3 +2,4 @@
 **/bin/
 # Ignore obj directories
 **/obj/
+*.csv
