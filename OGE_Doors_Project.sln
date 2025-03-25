@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OGE_Doors_Project", "OGE_Doors_Project.csproj", "{AAF3C748-70B9-2E8D-1A51-3F837B43890F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AAF3C748-70B9-2E8D-1A51-3F837B43890F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAF3C748-70B9-2E8D-1A51-3F837B43890F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAF3C748-70B9-2E8D-1A51-3F837B43890F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAF3C748-70B9-2E8D-1A51-3F837B43890F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0A57BE87-714D-4909-B30D-0958C429E1E2}
+	EndGlobalSection
+EndGlobal
