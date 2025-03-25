@@ -6,15 +6,10 @@
 <MudSnackbarProvider />
 <MudLayout>
     <MudAppBar Elevation="1">
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-        <MudText Typo="Typo.h5" Class="ml-3">Application</MudText>
+        <MudText Typo="Typo.h5" Class="ml-3">OG&E</MudText>
         <MudSpacer />
         <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle" />
-        <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
     </MudAppBar>
-    <MudDrawer id="nav-drawer" @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
-        <NavMenu />
-    </MudDrawer>
     <MudMainContent Class="mt-16 pa-4">
         @Body
     </MudMainContent>
@@ -28,7 +23,6 @@
 </div>
 
 @code {
-    private bool _drawerOpen = true;
     private bool _isDarkMode = true;
     private MudTheme? _theme = null;
 
@@ -43,12 +37,6 @@
             LayoutProperties = new LayoutProperties()
         };
     }
-
-    private void DrawerToggle()
-    {
-        _drawerOpen = !_drawerOpen;
-    }
-
     private void DarkModeToggle()
     {
         _isDarkMode = !_isDarkMode;
@@ -59,7 +47,6 @@
         Black = "#110e2d",
         AppbarText = "#424242",
         AppbarBackground = "rgba(255,255,255,0.8)",
-        DrawerBackground = "#ffffff",
         GrayLight = "#e8e8e8",
         GrayLighter = "#f9f9f9",
     };
@@ -68,19 +55,15 @@
     {
         Primary = "#7e6fff",
         Surface = "#1e1e2d",
-        Background = "#1a1a27",
-        BackgroundGray = "#151521",
-        AppbarText = "#92929f",
-        AppbarBackground = "rgba(26,26,39,0.8)",
-        DrawerBackground = "#1a1a27",
-        ActionDefault = "#74718e",
-        ActionDisabled = "#9999994d",
-        ActionDisabledBackground = "#605f6d4d",
-        TextPrimary = "#b2b0bf",
-        TextSecondary = "#92929f",
-        TextDisabled = "#ffffff33",
-        DrawerIcon = "#92929f",
-        DrawerText = "#92929f",
+        Background = "#121417",
+        AppbarBackground = "#121417",
+        AppbarText = "#FFFFFF",
+        ActionDefault = "#FF0000 ",
+        ActionDisabled = "#FF0000",
+        ActionDisabledBackground = "#FF0000",
+        TextPrimary = "#FFFFFF",
+        TextSecondary = "#9CABBA",
+        TextDisabled = "#FF0000",
         GrayLight = "#2a2833",
         GrayLighter = "#1e1e2d",
         Info = "#4a86ff",
