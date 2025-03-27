@@ -1,5 +1,5 @@
 using MudBlazor.Services;
-using OGE_Doors_Project.Components;
+using OGE_Doors_Project.Features;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +8,7 @@ builder.Services.AddMudServices();
 
 // Add services to the container.
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
+builder.Services.AddScoped<FileProcessingService>();
 
 var app = builder.Build();
 

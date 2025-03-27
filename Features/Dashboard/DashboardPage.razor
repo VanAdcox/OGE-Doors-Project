@@ -1,0 +1,22 @@
+@page "/"
+@inject FileProcessingService FileProcessingService
+
+<PageTitle>Dashboard</PageTitle>
+
+<h1>Dashboard</h1>
+@if(readerEvents != null) {
+	<p>Reader Events Recieved</p>
+}
+else {
+	<p>Waiting on events...</p>
+}
+
+@code {
+	private List<ReaderEvent>? readerEvents;
+
+	protected override void OnInitialized() {
+	}
+
+	private void HandleFileUpload(IBrowserFile file) {
+	}
+}

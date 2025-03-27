@@ -1,0 +1,19 @@
+﻿@inject FileProcessingService FileProcessingService
+<MudFileUpload T="IBrowserFile" Accept=".csv" OnFilesChanged="FileUploaded">
+    <ActivatorContent>
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   StartIcon="@Icons.Material.Filled.CloudUpload">
+            Upload CSV
+         </MudButton>
+    </ActivatorContent>
+</MudFileUpload>
+
+@code {
+	public Task FileUploaded(InputFileChangeEventArgs e)
+	{
+		if(e.File != null) {
+			FileProcessingService.ProcessFileAsync(e.File);
+		}
+	}
+}

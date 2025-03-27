@@ -12,3 +12,6 @@
     - Figure out how Mudblazor Themeing works
     - Make upload page match Figma Mockup
         - Match Figma design colors
+
+- Current Changes
+    - Working on FileProcessingService as the source of State
