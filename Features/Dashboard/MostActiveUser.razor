@@ -1,0 +1,27 @@
+@inject FileProcessingService fps
+
+@if(mostActiveUser != null) {
+	<h2>Most Active User</h2>
+	<p>User: @mostActiveUser.Hash</p>
+	<p>@mostActiveUser.Scans total scans</p>
+}
+else {
+	<p>Loading...</p>
+}
+
+@code {
+	private dynamic mostActiveUser;
+
+	protected override void OnInitialized() {
+		fps.OnDataProcessed += OnDataProcessed;
+	}
+
+	private void OnDataProcessed() {
+		mostActiveUser = fps.ReaderEvents
+			.GroupBy(e => e.IdHash)
+			.OrderByDescending(g => g.Count())
+			.Select(g => new { Hash = g.Key, Scans = g.Count() })
+			.FirstOrDefault();
+		StateHasChanged();
+	}
+}

@@ -1,22 +1,24 @@
 @page "/"
-@inject FileProcessingService FileProcessingService
+@inject FileProcessingService fps
 
 <PageTitle>Dashboard</PageTitle>
 
 <h1>Dashboard</h1>
-@if(readerEvents != null) {
+@if(fps.ReaderEvents != null) {
 	<p>Reader Events Recieved</p>
 }
 else {
 	<p>Waiting on events...</p>
 }
+<MostActiveUser />
+<MostActiveReader />
 
 @code {
-	private List<ReaderEvent>? readerEvents;
-
 	protected override void OnInitialized() {
+		fps.OnDataProcessed += OnDataProcessed;
 	}
 
-	private void HandleFileUpload(IBrowserFile file) {
+	private void OnDataProcessed() {
+		StateHasChanged();
 	}
 }

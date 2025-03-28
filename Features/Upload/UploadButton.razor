@@ -1,4 +1,5 @@
-﻿@inject FileProcessingService FileProcessingService
+﻿@inject FileProcessingService fps
+
 <MudFileUpload T="IBrowserFile" Accept=".csv" OnFilesChanged="FileUploaded">
     <ActivatorContent>
         <MudButton Variant="Variant.Filled"
@@ -10,10 +11,10 @@
 </MudFileUpload>
 
 @code {
-	public Task FileUploaded(InputFileChangeEventArgs e)
+	public async Task FileUploaded(InputFileChangeEventArgs e)
 	{
 		if(e.File != null) {
-			FileProcessingService.ProcessFileAsync(e.File);
+			await fps.ProcessFileAsync(e.File);
 		}
 	}
 }
