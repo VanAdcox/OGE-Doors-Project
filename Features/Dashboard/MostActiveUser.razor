@@ -17,11 +17,13 @@ else {
 	}
 
 	private void OnDataProcessed() {
-		mostActiveUser = fps.ReaderEvents
-			.GroupBy(e => e.IdHash)
-			.OrderByDescending(g => g.Count())
-			.Select(g => new { Hash = g.Key, Scans = g.Count() })
-			.FirstOrDefault();
-		StateHasChanged();
+		if(fps.ReaderEvents != null && fps.ReaderEvents.Any()) {
+			mostActiveUser = fps.ReaderEvents
+				.GroupBy(e => e.IdHash)
+				.OrderByDescending(g => g.Count())
+				.Select(g => new { Hash = g.Key, Scans = g.Count() })
+				.FirstOrDefault();
+			StateHasChanged();
+		}
 	}
 }

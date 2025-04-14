@@ -1,0 +1,27 @@
+@inject FileProcessingService fps
+
+@if(@averageVisitorsPerDay != null) {
+	<h2>Average Unique Visitors Per Day</h2>
+	<p>@averageVisitorsPerDay scans</p>
+}
+else {
+	<p>Loading...</p>
+}
+
+@code {
+	private dynamic averageVisitorsPerDay;
+
+	protected override void OnInitialized() {
+		fps.OnDataProcessed += OnDataProcessed;
+	}
+
+	private void OnDataProcessed() {
+		if(fps.ReaderEvents != null && fps.ReaderEvents.Any()) {
+			averageVisitorsPerDay = Math.Round(fps.ReaderEvents
+				.GroupBy(e => e.EventTimeUTC.Date)
+				.Select(g => g.Select(e => e.IdHash).Distinct().Count())
+				.Average(), 2);
+			StateHasChanged();
+		}
+	}
+}

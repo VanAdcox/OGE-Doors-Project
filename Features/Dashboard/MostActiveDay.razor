@@ -1,0 +1,39 @@
+@inject FileProcessingService fps
+
+@if(mostActiveDay != null) {
+	<h2>Most Active Day of the Week</h2>
+	<p>User: @mostActiveDay.DayOfWeek</p>
+	<p>@mostActiveDay.AverageScans average scans</p>
+}
+else {
+	<p>Loading...</p>
+}
+
+@code {
+	private dynamic mostActiveDay;
+
+	protected override void OnInitialized() {
+		fps.OnDataProcessed += OnDataProcessed;
+	}
+
+	private void OnDataProcessed() {
+		if(fps.ReaderEvents != null && fps.ReaderEvents.Any()) {
+			mostActiveDay = fps.ReaderEvents
+				.GroupBy(e => e.EventTimeUTC.Date) // Group by day (full date, ignoring time)
+				.Select(g => new
+				{
+					DayOfWeek = g.Key.DayOfWeek,
+					Count = g.Count()
+				})
+				.GroupBy(x => x.DayOfWeek) // Group by day of the week
+				.Select(g => new
+				{
+					DayOfWeek = g.Key,
+					AverageScans = g.Average(x => x.Count)
+				})
+				.OrderByDescending(x => x.AverageScans)
+				.FirstOrDefault();
+			StateHasChanged();
+		}
+	}
+}

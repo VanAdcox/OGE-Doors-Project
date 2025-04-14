@@ -17,11 +17,13 @@ else {
 	}
 
 	private void OnDataProcessed() {
-		mostActiveReader = fps.ReaderEvents
-			.GroupBy(e => new { e.DevId, e.Machine })
-			.OrderByDescending(g => g.Count())
-			.Select(g => new { g.Key.DevId, g.Key.Machine, Scans = g.Count() })
-			.FirstOrDefault();
-		StateHasChanged();
+		if(fps.ReaderEvents != null && fps.ReaderEvents.Any()) {
+			mostActiveReader = fps.ReaderEvents
+				.GroupBy(e => new { e.DevId, e.Machine })
+				.OrderByDescending(g => g.Count())
+				.Select(g => new { g.Key.DevId, g.Key.Machine, Scans = g.Count() })
+				.FirstOrDefault();
+			StateHasChanged();
+		}
 	}
 }

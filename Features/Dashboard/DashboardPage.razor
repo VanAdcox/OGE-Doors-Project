@@ -4,14 +4,14 @@
 <PageTitle>Dashboard</PageTitle>
 
 <h1>Dashboard</h1>
-@if(fps.ReaderEvents != null) {
-	<p>Reader Events Recieved</p>
+@if(fps.ReaderEvents == null) {
+	<p>Upload your CSV!</p>
 }
-else {
-	<p>Waiting on events...</p>
-}
+
 <MostActiveUser />
 <MostActiveReader />
+<MostActiveDay />
+<AverageVisitorsPerDay />
 
 @code {
 	protected override void OnInitialized() {
