@@ -8,10 +8,20 @@
 	<p>Upload your CSV!</p>
 }
 
-<MostActiveUser />
-<MostActiveReader />
-<MostActiveDay />
-<AverageVisitorsPerDay />
+<div style="display: flex; width: 100%;">
+	<div style="flex: 1; padding: 10px;">
+		<MostActiveUser />
+		<MostActiveReader />
+		<MostActiveDay />
+		<AverageVisitorsPerDay />
+	</div>
+	<div style="flex: 1; padding: 10px;">
+	    <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="300px" Width="500px"/>
+	</div>
+</div>
+
+
+
 <ActivityLineChart />
 
 @code {

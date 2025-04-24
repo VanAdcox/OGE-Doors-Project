@@ -1,22 +1,41 @@
 @inject FileProcessingService fps
 
 
-@if(_series.Count != 0) {
-	<MudChart ChartType="ChartType.Line" ChartSeries="@_series" XAxisLabels="@_xAxisLabels" ChartOptions="@_options" Width="100%" Height="350px"></MudChart>
-}
-else {
-    <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="300px" Width="500px"/>
-}
-
+<MudPaper Class="pa-4 ma-2">
+	@if(_series.Count != 0) {
+		<h2>Scans Over Time</h2>
+		<div style="display: flex; justify-content: center;">
+			<div style="max-width: 100%; width: 100%;">
+				<MudChart 
+					ChartType="ChartType.Line"
+					ChartSeries="@_series"
+					XAxisLabels="@_xAxisLabels"
+					ChartOptions="@_options"
+					AxisChartOptions="@_axisChartOptions"
+					Width="100%"
+					Height="400px" />
+			</div>
+		</div>
+	}
+	else {
+	    <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="300px" Width="500px"/>
+	}
+</MudPaper>
 @code {
 
 	private List<ChartSeries> _series = new();
 	private ChartOptions _options = new();
 	private string[] _xAxisLabels = {};
+	private AxisChartOptions _axisChartOptions = new();
 
 	protected override void OnInitialized() {
 		fps.OnDataProcessed += OnDataProcessed;
 		_options.InterpolationOption = InterpolationOption.NaturalSpline;
+		_options.ShowLegend = false;
+		_axisChartOptions.MatchBoundsToSize = true;
+		_axisChartOptions.LabelRotation = 45;
+		_axisChartOptions.LabelExtraHeight = 10;
+		_axisChartOptions.StackedBarWidthRatio = 0.1;
 	}
 
 	private void OnDataProcessed() {

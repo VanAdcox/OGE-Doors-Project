@@ -1,13 +1,16 @@
 @inject FileProcessingService fps
 
-@if(mostActiveUser != null) {
-	<h2>Most Active User</h2>
-	<p>User: @mostActiveUser.Hash</p>
-	<p>@mostActiveUser.Scans total scans</p>
-}
-else {
-	<p>Loading...</p>
-}
+
+<MudPaper Class="pa-4 ma-2">
+	@if(mostActiveUser != null) {
+		<h2>Most Active User</h2>
+		<p>User: @mostActiveUser.Hash</p>
+		<p>@mostActiveUser.Scans total scans</p>
+	}
+	else {
+		<p>Loading...</p>
+	}
+</MudPaper>
 
 @code {
 	private dynamic mostActiveUser;

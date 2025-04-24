@@ -1,13 +1,15 @@
 @inject FileProcessingService fps
 
-@if(mostActiveDay != null) {
-	<h2>Most Active Day of the Week</h2>
-	<p>@mostActiveDay.DayOfWeek</p>
-	<p>@mostActiveDay.AverageScans average scans</p>
-}
-else {
-	<p>Loading...</p>
-}
+<MudPaper Class="pa-4 ma-2">
+	@if(mostActiveDay != null) {
+		<h2>Most Active Day of the Week</h2>
+		<p>@mostActiveDay.DayOfWeek</p>
+		<p>@mostActiveDay.AverageScans average scans</p>
+	}
+	else {
+		<p>Loading...</p>
+	}
+</MudPaper>
 
 @code {
 	private dynamic mostActiveDay;

@@ -1,13 +1,16 @@
 @inject FileProcessingService fps
 
-@if(mostActiveReader != null) {
-	<h2>Most Active Reader</h2>
-	<p>Reader: (@mostActiveReader.DevId, @mostActiveReader.Machine)</p>
-	<p>@mostActiveReader.Scans total scans</p>
-}
-else {
-	<p>Loading...</p>
-}
+
+<MudPaper Class="pa-4 ma-2">
+	@if(mostActiveReader != null) {
+		<h2>Most Active Reader</h2>
+		<p>Reader: (@mostActiveReader.DevId, @mostActiveReader.Machine)</p>
+		<p>@mostActiveReader.Scans total scans</p>
+	}
+	else {
+		<p>Loading...</p>
+	}
+</MudPaper>
 
 @code {
 	private dynamic mostActiveReader;

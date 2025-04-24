@@ -1,13 +1,16 @@
 @inject FileProcessingService fps
 
-@if(@averageVisitorsPerDay != null) {
-	<h2>Average Unique Visitors Per Day</h2>
-	<p>@averageVisitorsPerDay scans</p>
-}
-else {
-	<p>Loading...</p>
-	<!--<MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="200px" Height="110px" /> -->
-}
+
+<MudPaper Class="pa-4 ma-2">
+	@if(@averageVisitorsPerDay != null) {
+		<h2>Average Unique Visitors Per Day</h2>
+		<p>@averageVisitorsPerDay scans</p>
+	}
+	else {
+		<p>Loading...</p>
+		<!--<MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="200px" Height="110px" /> -->
+	}
+</MudPaper>
 
 @code {
 	private dynamic averageVisitorsPerDay;
