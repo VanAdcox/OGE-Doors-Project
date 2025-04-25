@@ -8,7 +8,7 @@
 <MudLayout>
     <MudAppBar Elevation="1">
 	<!--Todo: make logo red in light mode-->
-	<MudImage ObjectFit="ObjectFit.Contain" Height="20" Src="oge_logo_white.svg" Alt="OG&E Logo"/>
+	<MudImage ObjectFit="ObjectFit.Contain" Height="20" Src="@_logoSrc" Alt="OG&E Logo"/>
         <MudSpacer />
 	<UploadButton />
         <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle" />
@@ -28,6 +28,7 @@
 @code {
     private bool _isDarkMode = true;
     private MudTheme? _theme = null;
+    private string _logoSrc => _isDarkMode ? "oge_logo_white.svg" : "oge_logo_red.svg";
 
     protected override void OnInitialized()
     {
