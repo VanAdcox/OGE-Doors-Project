@@ -1,5 +1,6 @@
 ﻿@inherits LayoutComponentBase
 @using OGE_Doors_Project.Features.Upload
+@using OGE_Doors_Project.Features.State
 
 <MudThemeProvider Theme="@_theme" IsDarkMode="_isDarkMode" />
 <MudPopoverProvider />
@@ -7,9 +8,9 @@
 <MudSnackbarProvider />
 <MudLayout>
     <MudAppBar Elevation="1">
-	<!--Todo: make logo red in light mode-->
 	<MudImage ObjectFit="ObjectFit.Contain" Height="20" Src="@_logoSrc" Alt="OG&E Logo"/>
         <MudSpacer />
+	<DateRangeSelector />
 	<UploadButton />
         <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle" />
     </MudAppBar>

@@ -1,0 +1,19 @@
+@inject FileProcessingService Fps
+
+<div>
+    <InputDate @bind-Value="StartDate" />
+    to
+    <InputDate @bind-Value="EndDate" />
+    <button @onclick="ApplyFilter">Apply</button>
+</div>
+
+@code {
+    private DateTime? StartDate { get; set; }
+    private DateTime? EndDate { get; set; }
+
+    private void ApplyFilter()
+    {
+        Fps.SetDateRange(StartDate, EndDate);
+    }
+}
+

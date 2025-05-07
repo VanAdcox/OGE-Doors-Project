@@ -19,18 +19,26 @@
             }
             else if (context.Severity == 1)
             {
-                <MudIcon Icon="@Icons.Material.Filled.Circle" Color="Color.Warning" />
+	    	<MudTooltip Text="Medium Severity">
+			<MudIcon Icon="@Icons.Material.Filled.Circle" Color="Color.Warning" />
+		</MudTooltip>
             }
             else if (context.Severity == 0)
             {
-                <MudIcon Icon="@Icons.Material.Filled.Circle" Color="Color.Success" />
+	    	<MudTooltip Text="Low Severity">
+			<MudIcon Icon="@Icons.Material.Filled.Circle" Color="Color.Success" />
+		</MudTooltip>
             }
         </MudTd>
 	<MudTd DataLabel="Alert Type">
 	    @if (@context is ImpossibleMovementAlert)
             {
-                <span>It's an Impossible Movement!</span>
+                <span>Impossible Movement</span>
             }
+	    else if (@context is ScanLimitAlert)
+	    {
+		    <span>Scan Limit</span>
+	    }
 	    else
 	    {
 		<span>Unknown alert</span>
@@ -58,6 +66,7 @@
     private void OnDataProcessed()
     {
         alerts = ImpossibleMovements();
+	alerts.AddRange(ScanLimits());
 	StateHasChanged();
     }
 
@@ -83,8 +92,19 @@
 		}
 		return warningScans;
 	}
-	private List<ReaderEvent> AbnormalHours() {
-		List<ReaderEvent> abnormalEvents = new List<ReaderEvent>();
-		return abnormalEvents;
+
+	private List<Alert> ScanLimits() {
+		List<Alert> warningScans = new List<Alert>();
+		var groupedByDevIdMachine = fps.ReaderEvents
+			.GroupBy(x => new { x.DevId, x.Machine })
+			.OrderByDescending(g => g.Count())
+			.ToList();
+
+		foreach(var group in groupedByDevIdMachine) {
+			if(group.Count() > 1500) {
+				warningScans.Add(new ScanLimitAlert(group.First().EventTimeUTC, group.ToList(), group.Key.DevId, group.Key.Machine, group.First().Location));
+			}
+		}
+		return warningScans;
 	}
 }

@@ -8,7 +8,6 @@
 	}
 	else {
 		<p>Loading...</p>
-		<!--<MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="200px" Height="110px" /> -->
 	}
 </MudPaper>
 
@@ -16,16 +15,24 @@
 	private dynamic averageVisitorsPerDay;
 
 	protected override void OnInitialized() {
-		fps.OnDataProcessed += OnDataProcessed;
+		fps.OnDataProcessed += Recalculate;
+		fps.OnFilterChanged += Recalculate;
 	}
 
-	private void OnDataProcessed() {
-		if(fps.ReaderEvents != null && fps.ReaderEvents.Any()) {
-			averageVisitorsPerDay = Math.Round(fps.ReaderEvents
+	private async void Recalculate() {
+		Console.WriteLine("recalculated");
+		var filteredEvents = fps.GetFilteredEvents();
+
+		if (filteredEvents != null && filteredEvents.Any())
+		{
+			Console.WriteLine("inside if");
+
+			averageVisitorsPerDay = Math.Round(filteredEvents
 				.GroupBy(e => e.EventTimeUTC.Date)
 				.Select(g => g.Select(e => e.IdHash).Distinct().Count())
 				.Average(), 2);
-			StateHasChanged();
+			Console.WriteLine(averageVisitorsPerDay);
+			await InvokeAsync(StateHasChanged);
 		}
 	}
 }

@@ -2,8 +2,11 @@ using Microsoft.AspNetCore.Components.Forms;
 
 public class FileProcessingService {
 	public List<ReaderEvent>? ReaderEvents;
+	public DateTime? StartDate { get; private set; }
+	public DateTime? EndDate { get; private set; }
 
 	public event Action? OnDataProcessed;
+	public event Action? OnFilterChanged;
 
 	public async Task ProcessFileAsync(IBrowserFile file) {
 		ReaderEvents = new List<ReaderEvent>();
@@ -36,5 +39,23 @@ public class FileProcessingService {
 		}
 		Console.WriteLine($"{duplicateLines} Duplicate Entries Found");
 		OnDataProcessed?.Invoke();
+	}
+
+	public IEnumerable<ReaderEvent> GetFilteredEvents()
+	{
+		if (ReaderEvents == null) return Enumerable.Empty<ReaderEvent>();
+
+		Console.WriteLine($"start: {StartDate}");
+		Console.WriteLine($"end: {EndDate}");
+		Console.WriteLine(ReaderEvents.Where(ev => (!StartDate.HasValue || ev.EventTimeUTC >= StartDate) && (!EndDate.HasValue || ev.EventTimeUTC <= EndDate)).Count());
+		return ReaderEvents.Where(ev =>
+				(!StartDate.HasValue || ev.EventTimeUTC >= StartDate) &&
+				(!EndDate.HasValue || ev.EventTimeUTC <= EndDate));
+	}
+	public void SetDateRange(DateTime? start, DateTime? end)
+	{
+		StartDate = start;
+		EndDate = end;
+		OnFilterChanged?.Invoke();
 	}
 }
