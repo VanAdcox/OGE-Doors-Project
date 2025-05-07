@@ -1,0 +1,90 @@
+@inject FileProcessingService fps
+
+<MudTable Items="alerts" Hover="true" Sortable="true" Pageable="true" 
+          RowsPerPage="RowsPerPage" Page="CurrentPage" 
+          Filterable="true">
+    <HeaderContent>
+        <MudTh SortBy="x => x.Severity">Severity</MudTh>
+        <MudTh>Alert Type</MudTh>
+        <MudTh SortBy="x => x.getDescription()">Description</MudTh>
+        <MudTh SortBy="x => x.DateOfAlertUTC">Date</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Severity">
+            @if (context.Severity == 2)
+            {
+	    	<MudTooltip Text="High Severity">
+			<MudIcon Icon="@Icons.Material.Filled.Circle" Color="Color.Error" />
+		</MudTooltip>
+            }
+            else if (context.Severity == 1)
+            {
+                <MudIcon Icon="@Icons.Material.Filled.Circle" Color="Color.Warning" />
+            }
+            else if (context.Severity == 0)
+            {
+                <MudIcon Icon="@Icons.Material.Filled.Circle" Color="Color.Success" />
+            }
+        </MudTd>
+	<MudTd DataLabel="Alert Type">
+	    @if (@context is ImpossibleMovementAlert)
+            {
+                <span>It's an Impossible Movement!</span>
+            }
+	    else
+	    {
+		<span>Unknown alert</span>
+	    }
+
+	</MudTd>
+	<MudTd DataLabel="Description">@context.getDescription()</MudTd>
+	<MudTd DataLabel="Date of Alert">@context.DateOfAlertUTC.ToString("MMMM dd, yyyy hh:mm tt")</MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+
+@code {
+    private List<Alert> alerts = new List<Alert>();
+    private int CurrentPage { get; set; } = 0;
+    private int RowsPerPage { get; set; } = 5;
+
+    protected override void OnInitialized()
+    {
+        fps.OnDataProcessed += OnDataProcessed;
+    }
+
+    private void OnDataProcessed()
+    {
+        alerts = ImpossibleMovements();
+	StateHasChanged();
+    }
+
+	private List<Alert> ImpossibleMovements() {
+		List<Alert> warningScans = new List<Alert>();
+
+		var groupedByIdHash = fps.ReaderEvents
+		    .GroupBy(x => x.IdHash)
+		    .OrderBy(g => g.Key)
+		    .ToList();
+
+		foreach (var group in groupedByIdHash)
+		{
+		    ReaderEvent lastEvent = null;
+		    foreach (var readerEvent in group.OrderBy(x => x.EventTimeUTC))
+		    {
+			if (lastEvent != null && lastEvent.ReaderDesc != readerEvent.ReaderDesc && Math.Abs((lastEvent.EventTimeUTC - readerEvent.EventTimeUTC).TotalSeconds) <= 3)
+			{
+				warningScans.Add(new ImpossibleMovementAlert(readerEvent.EventTimeUTC, new List<ReaderEvent>() { readerEvent, lastEvent }));
+			}
+			lastEvent = readerEvent;
+		    }
+		}
+		return warningScans;
+	}
+	private List<ReaderEvent> AbnormalHours() {
+		List<ReaderEvent> abnormalEvents = new List<ReaderEvent>();
+		return abnormalEvents;
+	}
+}
