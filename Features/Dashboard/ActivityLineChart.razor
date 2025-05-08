@@ -31,7 +31,6 @@
 	protected override void OnInitialized() {
 		fps.OnDataProcessed += Recalculate;
 		fps.OnFilterChanged += Recalculate;
-		_options.InterpolationOption = InterpolationOption.NaturalSpline;
 		_options.ShowLegend = false;
 		_axisChartOptions.MatchBoundsToSize = true;
 		_axisChartOptions.LabelRotation = 45;
@@ -57,6 +56,9 @@
 					Count = g.Count()
 				})
 				.ToList();
+			_options.InterpolationOption = dailyCounts.Count < 4 
+				? InterpolationOption.Straight 
+				: InterpolationOption.NaturalSpline;
 
 			_xAxisLabels = dailyCounts.Select(x => x.Date).ToArray();
 			

@@ -1,25 +1,52 @@
 @inject FileProcessingService fps
+@using MudBlazor
 
-@if(enabled) {
-	<div>
-	    <InputDate @bind-Value="StartDate" />
-	    to
-	    <InputDate @bind-Value="EndDate" />
-	    <button @onclick="ApplyFilter">Apply</button>
-	</div>
+@if (enabled)
+{
+<div>
+        <MudGrid>
+	    <MudItem xs="12" sm="5">
+                <MudDatePicker Label="Start Date" @bind-Date="StartDate" MinDate="MinAvailableDate" MaxDate="MaxAvailableDate"/>
+            </MudItem>
+            <MudItem xs="12" sm="5">
+                <MudDatePicker Label="End Date" @bind-Date="EndDate" MinDate="MinAvailableDate" MaxDate="MaxAvailableDate"/>
+            </MudItem>
+            <MudItem xs="12" sm="2" Class="d-flex align-center">
+		<MudButton Variant="Variant.Filled"
+			   Color="Color.Secondary"
+			   StartIcon="@Icons.Material.Filled.Check"
+			   OnClick="ApplyFilter">
+		   	Apply 
+		 </MudButton>
+            </MudItem>
+        </MudGrid>
+</div>
 }
+
 
 @code {
 	private DateTime? StartDate { get; set; }
 	private DateTime? EndDate { get; set; }
+	private DateTime? MinAvailableDate { get; set; }
+	private DateTime? MaxAvailableDate { get; set; }
 	private bool enabled = false;
 
 	protected override void OnInitialized() {
 		fps.OnDataProcessed += OnDataProcessed;
 	}
+
 	private void OnDataProcessed() {
-		enabled = true;
-		StateHasChanged();
+		if (fps.ReaderEvents != null && fps.ReaderEvents.Any()) {
+			MinAvailableDate = fps.ReaderEvents.Min(e => e.EventTimeUTC.Date);
+			MaxAvailableDate = fps.ReaderEvents.Max(e => e.EventTimeUTC.Date);
+
+			StartDate = MinAvailableDate;
+			EndDate = MaxAvailableDate;
+			enabled = true;
+
+			StateHasChanged();
+		}
+
 	}
 	private void ApplyFilter()
 	{

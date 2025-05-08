@@ -4,7 +4,7 @@
 <MudPaper Class="pa-4 ma-2">
 	@if(mostActiveUser != null) {
 		<h2>Most Active User</h2>
-		<p>User: @mostActiveUser.Hash</p>
+		<p>@mostActiveUser.Hash</p>
 		<p>@mostActiveUser.Scans total scans</p>
 	}
 	else {
@@ -16,12 +16,14 @@
 	private dynamic mostActiveUser;
 
 	protected override void OnInitialized() {
-		fps.OnDataProcessed += OnDataProcessed;
+		fps.OnDataProcessed += Recalculate;
+		fps.OnFilterChanged += Recalculate;
 	}
 
-	private void OnDataProcessed() {
-		if(fps.ReaderEvents != null && fps.ReaderEvents.Any()) {
-			mostActiveUser = fps.ReaderEvents
+	private async void Recalculate() {
+		var filteredEvents = fps.GetFilteredEvents();
+		if(filteredEvents != null && filteredEvents.Any()) {
+			mostActiveUser = filteredEvents
 				.GroupBy(e => e.IdHash)
 				.OrderByDescending(g => g.Count())
 				.Select(g => new { Hash = g.Key, Scans = g.Count() })

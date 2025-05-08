@@ -15,19 +15,21 @@
 	private dynamic mostActiveDay;
 
 	protected override void OnInitialized() {
-		fps.OnDataProcessed += OnDataProcessed;
+		fps.OnDataProcessed += Recalculate;
+		fps.OnFilterChanged += Recalculate;
 	}
 
-	private void OnDataProcessed() {
-		if(fps.ReaderEvents != null && fps.ReaderEvents.Any()) {
-			mostActiveDay = fps.ReaderEvents
-				.GroupBy(e => e.EventTimeUTC.Date) // Group by day (full date, ignoring time)
+	private async void Recalculate() {
+		var filteredEvents = fps.GetFilteredEvents();
+		if(filteredEvents != null && filteredEvents.Any()) {
+			mostActiveDay = filteredEvents
+				.GroupBy(e => e.EventTimeUTC.Date)
 				.Select(g => new
 				{
 					DayOfWeek = g.Key.DayOfWeek,
 					Count = g.Count()
 				})
-				.GroupBy(x => x.DayOfWeek) // Group by day of the week
+				.GroupBy(x => x.DayOfWeek)
 				.Select(g => new
 				{
 					DayOfWeek = g.Key,
@@ -35,7 +37,7 @@
 				})
 				.OrderByDescending(x => x.AverageScans)
 				.FirstOrDefault();
-			StateHasChanged();
+			await InvokeAsync(StateHasChanged);
 		}
 	}
 }

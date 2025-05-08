@@ -10,8 +10,12 @@
     <MudAppBar Elevation="1">
 	<MudImage ObjectFit="ObjectFit.Contain" Height="20" Src="@_logoSrc" Alt="OG&E Logo"/>
         <MudSpacer />
-	<DateRangeSelector />
-	<UploadButton />
+	<div Class="ml-2">
+		<DateRangeSelector />
+	</div>
+	<div Class="ml-2">
+		<UploadButton />
+	</div>
         <MudIconButton Icon="@(DarkLightModeButtonIcon)" Color="Color.Inherit" OnClick="@DarkModeToggle" />
     </MudAppBar>
     <MudMainContent Class="mt-16 pa-4">

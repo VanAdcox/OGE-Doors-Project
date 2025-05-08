@@ -4,7 +4,7 @@
 <MudPaper Class="pa-4 ma-2">
 	@if(mostActiveReader != null) {
 		<h2>Most Active Reader</h2>
-		<p>Reader: (@mostActiveReader.DevId, @mostActiveReader.Machine)</p>
+		<p>DevId: @mostActiveReader.DevId, Machine: @mostActiveReader.Machine</p>
 		<p>@mostActiveReader.Scans total scans</p>
 	}
 	else {
@@ -16,17 +16,19 @@
 	private dynamic mostActiveReader;
 
 	protected override void OnInitialized() {
-		fps.OnDataProcessed += OnDataProcessed;
+		fps.OnDataProcessed += Recalculate;
+		fps.OnFilterChanged += Recalculate;
 	}
 
-	private void OnDataProcessed() {
-		if(fps.ReaderEvents != null && fps.ReaderEvents.Any()) {
-			mostActiveReader = fps.ReaderEvents
+	private async void Recalculate() {
+		var filteredEvents = fps.GetFilteredEvents();
+		if(filteredEvents != null && filteredEvents.Any()) {
+			mostActiveReader = filteredEvents
 				.GroupBy(e => new { e.DevId, e.Machine })
 				.OrderByDescending(g => g.Count())
 				.Select(g => new { g.Key.DevId, g.Key.Machine, Scans = g.Count() })
 				.FirstOrDefault();
-			StateHasChanged();
+			await InvokeAsync(StateHasChanged);
 		}
 	}
 }

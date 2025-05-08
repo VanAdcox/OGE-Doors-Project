@@ -60,20 +60,21 @@
 
     protected override void OnInitialized()
     {
-        fps.OnDataProcessed += OnDataProcessed;
+        fps.OnDataProcessed += Recalculate;
+	fps.OnFilterChanged += Recalculate;
     }
 
-    private void OnDataProcessed()
-    {
-        alerts = ImpossibleMovements();
-	alerts.AddRange(ScanLimits());
-	StateHasChanged();
-    }
+	private async void Recalculate() {
+		alerts = ImpossibleMovements();
+		alerts.AddRange(ScanLimits());
+		await InvokeAsync(StateHasChanged);
+	}
 
 	private List<Alert> ImpossibleMovements() {
+		var filteredEvents = fps.GetFilteredEvents();
 		List<Alert> warningScans = new List<Alert>();
 
-		var groupedByIdHash = fps.ReaderEvents
+		var groupedByIdHash = filteredEvents
 		    .GroupBy(x => x.IdHash)
 		    .OrderBy(g => g.Key)
 		    .ToList();
@@ -94,8 +95,10 @@
 	}
 
 	private List<Alert> ScanLimits() {
+		var filteredEvents = fps.GetFilteredEvents();
 		List<Alert> warningScans = new List<Alert>();
-		var groupedByDevIdMachine = fps.ReaderEvents
+
+		var groupedByDevIdMachine = filteredEvents
 			.GroupBy(x => new { x.DevId, x.Machine })
 			.OrderByDescending(g => g.Count())
 			.ToList();
