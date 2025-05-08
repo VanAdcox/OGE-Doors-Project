@@ -44,7 +44,7 @@ public class FileProcessingService {
 	{
 		if (ReaderEvents == null) return Enumerable.Empty<ReaderEvent>();
 		
-		var start = StartDate?.Date;
+		var start = StartDate?.Date.AddDays(-1).AddTicks(-1);
 		var end = EndDate?.Date.AddDays(1).AddTicks(-1);
 
 		return ReaderEvents.Where(ev =>
