@@ -1,19 +1,29 @@
-@inject FileProcessingService Fps
+@inject FileProcessingService fps
 
-<div>
-    <InputDate @bind-Value="StartDate" />
-    to
-    <InputDate @bind-Value="EndDate" />
-    <button @onclick="ApplyFilter">Apply</button>
-</div>
+@if(enabled) {
+	<div>
+	    <InputDate @bind-Value="StartDate" />
+	    to
+	    <InputDate @bind-Value="EndDate" />
+	    <button @onclick="ApplyFilter">Apply</button>
+	</div>
+}
 
 @code {
-    private DateTime? StartDate { get; set; }
-    private DateTime? EndDate { get; set; }
+	private DateTime? StartDate { get; set; }
+	private DateTime? EndDate { get; set; }
+	private bool enabled = false;
 
-    private void ApplyFilter()
-    {
-        Fps.SetDateRange(StartDate, EndDate);
-    }
+	protected override void OnInitialized() {
+		fps.OnDataProcessed += OnDataProcessed;
+	}
+	private void OnDataProcessed() {
+		enabled = true;
+		StateHasChanged();
+	}
+	private void ApplyFilter()
+	{
+		fps.SetDateRange(StartDate, EndDate);
+	}
 }
 

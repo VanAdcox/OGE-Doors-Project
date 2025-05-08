@@ -29,7 +29,8 @@
 	private AxisChartOptions _axisChartOptions = new();
 
 	protected override void OnInitialized() {
-		fps.OnDataProcessed += OnDataProcessed;
+		fps.OnDataProcessed += Recalculate;
+		fps.OnFilterChanged += Recalculate;
 		_options.InterpolationOption = InterpolationOption.NaturalSpline;
 		_options.ShowLegend = false;
 		_axisChartOptions.MatchBoundsToSize = true;
@@ -38,12 +39,16 @@
 		_axisChartOptions.StackedBarWidthRatio = 0.1;
 	}
 
-	private void OnDataProcessed() {
-		if(fps.ReaderEvents != null && fps.ReaderEvents.Any()) {
-			_series = new();
-			_xAxisLabels = new string[0];
+	private async void Recalculate() {
+		var filteredEvents = fps.GetFilteredEvents();
 
-			var dailyCounts = fps.ReaderEvents
+		if(filteredEvents != null && filteredEvents.Any()) {
+			_series.Clear();
+			_xAxisLabels = Array.Empty<string>();
+
+			await InvokeAsync(StateHasChanged);  // for some reason mudcharts only update if you do it like this
+
+			var dailyCounts = filteredEvents 
 				.GroupBy(e => e.EventTimeUTC.Date)
 				.OrderBy(g => g.Key)
 				.Select(g => new
@@ -55,13 +60,12 @@
 
 			_xAxisLabels = dailyCounts.Select(x => x.Date).ToArray();
 			
-			_series.Add( new ChartSeries{ 
+			_series.Add(new ChartSeries{ 
 					Name = "Scans",
 					Data =  dailyCounts.Select(x => (double)x.Count).ToArray()
 				}
 			);
-
+			await InvokeAsync(StateHasChanged);
 		}
-		StateHasChanged();
 	}
 }

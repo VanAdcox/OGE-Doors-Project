@@ -37,20 +37,19 @@ public class FileProcessingService {
 			}
 			lastLine = line;
 		}
-		Console.WriteLine($"{duplicateLines} Duplicate Entries Found");
 		OnDataProcessed?.Invoke();
 	}
 
 	public IEnumerable<ReaderEvent> GetFilteredEvents()
 	{
 		if (ReaderEvents == null) return Enumerable.Empty<ReaderEvent>();
+		
+		var start = StartDate?.Date;
+		var end = EndDate?.Date.AddDays(1).AddTicks(-1);
 
-		Console.WriteLine($"start: {StartDate}");
-		Console.WriteLine($"end: {EndDate}");
-		Console.WriteLine(ReaderEvents.Where(ev => (!StartDate.HasValue || ev.EventTimeUTC >= StartDate) && (!EndDate.HasValue || ev.EventTimeUTC <= EndDate)).Count());
 		return ReaderEvents.Where(ev =>
-				(!StartDate.HasValue || ev.EventTimeUTC >= StartDate) &&
-				(!EndDate.HasValue || ev.EventTimeUTC <= EndDate));
+				(!start.HasValue || ev.EventTimeUTC >= start) &&
+				(!end.HasValue || ev.EventTimeUTC <= end));
 	}
 	public void SetDateRange(DateTime? start, DateTime? end)
 	{

@@ -20,18 +20,15 @@
 	}
 
 	private async void Recalculate() {
-		Console.WriteLine("recalculated");
 		var filteredEvents = fps.GetFilteredEvents();
 
 		if (filteredEvents != null && filteredEvents.Any())
 		{
-			Console.WriteLine("inside if");
 
 			averageVisitorsPerDay = Math.Round(filteredEvents
 				.GroupBy(e => e.EventTimeUTC.Date)
 				.Select(g => g.Select(e => e.IdHash).Distinct().Count())
 				.Average(), 2);
-			Console.WriteLine(averageVisitorsPerDay);
 			await InvokeAsync(StateHasChanged);
 		}
 	}
